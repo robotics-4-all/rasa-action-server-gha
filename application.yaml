@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rasa-action-server
+  namespace: argo-cd
+spec:
+  project: dflow
+  source:
+    chart: rasa/rasa-action-server
+    repoURL: https://helm.rasa.com
+    helm:
+      releaseName: rasa-action-server
+      values: |
+        registry: docker.io/klpanagi
+        image
+          name: rasa-action-server
+          tag: 5753be463e020648c14ee018963ca0724f88e828
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: rasa
