@@ -48,36 +48,10 @@ jobs:
           method: service-account
           k8s-url: https://issel17.ee.auth.gr:16443
           k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
-      # - name: Deploy to Cluster
-      #   uses: wahyd4/kubectl-helm-action@master
-      #   env:
-      #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      #   with:
-      #     args: |
-      #       helm upgrade --namespace rasa --set image.tag=${{ github.sha }} rasa-action-server rasa/rasa-action-server
-      # - name: Deploy
-      #   uses: WyriHaximus/github-action-helm3@v2
-      #   with:
-      #     exec: helm repo add rasa https://helm.rasa.com && helm upgrade --namespace rasa --set image.tag=${{ github.sha }} rasa-action-server rasa/rasa-action-server
-      #     kubeconfig: '${{ secrets.KUBECONFIG }}'
-      - name: 'Deploy'
-        uses: 'deliverybot/helm@v1'
-        with:
-          release: 'rasa-action-server'
-          namespace: 'rasa'
-          chart: 'rasa/rasa-action-server'
-          token: '${{ github.token }}'
-          values: |
-            image.tag: github.sha
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
-
-  # deploy:
-  #   - name: "Upgrade a Rasa Action Server deployment"
-  #     run: |
-  #       helm upgrade --install --reuse-values \
-  #         --set image.name=${{ steps.action_server.outputs.docker_image_name }} \
-  #         --set image.tag=${{ steps.action_server.outputs.docker_image_tag }} \
-  #         --namespace rasa \
-  #         rasa-action-server rasa/rasa-action-server
-  #
+      - name: "Upgrade a Rasa Action Server deployment"
+        run: |
+          helm upgrade --install --reuse-values \
+            --set image.name=${{ steps.action_server.outputs.docker_image_name }} \
+            --set image.tag=${{ steps.action_server.outputs.docker_image_tag }} \
+            --namespace rasa \
+            rasa-action-server rasa/rasa-action-server
