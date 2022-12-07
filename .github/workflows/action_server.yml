@@ -55,11 +55,22 @@ jobs:
       #   with:
       #     args: |
       #       helm upgrade --namespace rasa --set image.tag=${{ github.sha }} rasa-action-server rasa/rasa-action-server
-      - name: Deploy
-        uses: WyriHaximus/github-action-helm3@v2
+      # - name: Deploy
+      #   uses: WyriHaximus/github-action-helm3@v2
+      #   with:
+      #     exec: helm repo add rasa https://helm.rasa.com && helm upgrade --namespace rasa --set image.tag=${{ github.sha }} rasa-action-server rasa/rasa-action-server
+      #     kubeconfig: '${{ secrets.KUBECONFIG }}'
+      - name: 'Deploy'
+        uses: 'deliverybot/helm@v1'
         with:
-          exec: helm repo add rasa https://helm.rasa.com && helm upgrade --namespace rasa --set image.tag=${{ github.sha }} rasa-action-server rasa/rasa-action-server
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
+          release: 'rasa-action-server'
+          namespace: 'rasa'
+          chart: 'rasa/rasa-action-server'
+          token: '${{ github.token }}'
+          values: |
+            image.tag: github.sha
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
 
   # deploy:
   #   - name: "Upgrade a Rasa Action Server deployment"
