@@ -26,6 +26,8 @@ jobs:
       uses: RasaHQ/action-server-gha@main
       # Full list of parameters: https://github.com/RasaHQ/action-server-gha/tree/master#input-arguments
       with:
+        actions_directory: actions/
+        requirements_file: actions/requirements.txt
         docker_image_name: 'klpanagi/rasa-action-server'
         docker_registry_login: ${{ secrets.DOCKER_HUB_LOGIN }}
         docker_registry_password: ${{ secrets.DOCKER_HUB_PASSWORD }}
@@ -34,8 +36,6 @@ jobs:
         #
         # github.sha - The commit SHA that triggered the workflow run
         docker_image_tag: ${{ github.sha }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
 
   deploy:
     name: Deploy Rasa Action server in kubernetes cluster
@@ -48,6 +48,14 @@ jobs:
           method: service-account
           k8s-url: https://issel17.ee.auth.gr:16443
           k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+      - name: 'Deploy'
+        uses: 'deliverybot/helm@v1'
+        with:
+          namespace: 'rasa'
+          chart: 'rasa-action-server'
+          token: '${{ github.token }}'
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
 
   # deploy:
   #   - name: "Upgrade a Rasa Action Server deployment"
