@@ -46,7 +46,7 @@ jobs:
         uses: azure/k8s-set-context@v2
         with:
           method: service-account
-          k8s-url: issel17.ee.auth.gr
+          k8s-url: https://issel17.ee.auth.gr:16443
           k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
       - name: "Upgrade a Rasa Action Server deployment"
         run: |
