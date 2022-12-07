@@ -6,7 +6,7 @@ metadata:
 spec:
   project: dflow
   source:
-    chart: rasa/rasa-action-server
+    chart: rasa-action-server
     repoURL: https://helm.rasa.com
     helm:
       releaseName: rasa-action-server
@@ -18,3 +18,7 @@ spec:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: rasa
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
