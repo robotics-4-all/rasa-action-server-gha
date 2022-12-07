@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build Action Server image and upgrade Rasa X/Enterprise deployment
+    name: Build Action Server image and push to DockerHub
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
       uses: azure/k8s-set-context@v2
       with:
         method: service-account
-        k8s-url: 155.207.19.67
+        k8s-url: issel17.ee.auth.gr
         k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
 
   # deploy:
