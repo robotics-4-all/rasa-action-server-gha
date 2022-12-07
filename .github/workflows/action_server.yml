@@ -48,6 +48,13 @@ jobs:
           method: service-account
           k8s-url: https://issel17.ee.auth.gr:16443
           k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+      - name: Deploy to Cluster
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: |
+            helm upgrade --namespace rasa --set image.tag=${{ github.sha }} rasa-action-server rasa/rasa-action-server
 
   # deploy:
   #   - name: "Upgrade a Rasa Action Server deployment"
