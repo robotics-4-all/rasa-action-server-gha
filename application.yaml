@@ -8,6 +8,7 @@ spec:
   source:
     chart: rasa-action-server
     repoURL: https://helm.rasa.com
+    targetRevision: 1.16.1
     helm:
       releaseName: rasa-action-server
       values: |
