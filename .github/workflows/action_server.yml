@@ -34,12 +34,12 @@ jobs:
         # github.sha - The commit SHA that triggered the workflow run
         docker_image_tag: ${{ github.sha }}
 
-  deploy:
-    - name: "Upgrade a Rasa Action Server deployment"
-      run: |
-        helm upgrade --install --reuse-values \
-          --set image.name=${{ steps.action_server.outputs.docker_image_name }} \
-          --set image.tag=${{ steps.action_server.outputs.docker_image_tag }} \
-          --namespace rasa \
-          rasa-action-server rasa/rasa-action-server
-
+  # deploy:
+  #   - name: "Upgrade a Rasa Action Server deployment"
+  #     run: |
+  #       helm upgrade --install --reuse-values \
+  #         --set image.name=${{ steps.action_server.outputs.docker_image_name }} \
+  #         --set image.tag=${{ steps.action_server.outputs.docker_image_tag }} \
+  #         --namespace rasa \
+  #         rasa-action-server rasa/rasa-action-server
+  #
