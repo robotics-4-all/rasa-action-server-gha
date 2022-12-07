@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: rasa-action-server-app
-  namespace: argocd
+  namespace: rasa
 spec:
   project: dflow
   source:
