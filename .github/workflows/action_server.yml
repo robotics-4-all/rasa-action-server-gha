@@ -36,13 +36,13 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-    deploy:
-      - name: Set the Kubernetes context
-        uses: azure/k8s-set-context@v2
-        with:
-          method: service-account
-          k8s-url: 155.207.19.67
-          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+  deploy:
+    - name: Set the Kubernetes context
+      uses: azure/k8s-set-context@v2
+      with:
+        method: service-account
+        k8s-url: 155.207.19.67
+        k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
 
   # deploy:
   #   - name: "Upgrade a Rasa Action Server deployment"
