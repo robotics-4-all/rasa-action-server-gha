@@ -4,6 +4,7 @@ on:
       - main
     paths:
     - 'actions/**'
+    - '.github/workflows/action_server.yml'
 
 jobs:
   build:
@@ -35,7 +36,7 @@ jobs:
         docker_image_tag: ${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        
+
   deploy:
     name: Deploy Rasa Action server in kubernetes cluster
     needs: [ build ]
