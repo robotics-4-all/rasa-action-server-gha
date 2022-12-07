@@ -58,7 +58,7 @@ jobs:
       - name: Deploy
         uses: WyriHaximus/github-action-helm3@v2
         with:
-          exec: helm upgrade --namespace rasa --set image.tag=${{ github.sha }} rasa-action-server rasa/rasa-action-server
+          exec: helm repo add rasa https://helm.rasa.com && helm upgrade --namespace rasa --set image.tag=${{ github.sha }} rasa-action-server rasa/rasa-action-server
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
   # deploy:
