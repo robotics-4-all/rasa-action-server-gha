@@ -33,6 +33,7 @@ def compute_user_properties(property):
     if property.lower() == 'address':
       return ''
 
+
 class Actionaskform1formcityslot(Action):
 
     def name(self) -> Text:
@@ -45,6 +46,7 @@ class Actionaskform1formcityslot(Action):
         dispatcher.utter_message(text = f"For which city { NAME } ?")
 
         return output
+
 
 class Actionaskform1formtimeslot(Action):
 
