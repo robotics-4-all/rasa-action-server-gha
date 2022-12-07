@@ -35,14 +35,18 @@ jobs:
         docker_image_tag: ${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-
+        
   deploy:
-    - name: Set the Kubernetes context
-      uses: azure/k8s-set-context@v2
-      with:
-        method: service-account
-        k8s-url: issel17.ee.auth.gr
-        k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+    name: Deploy Rasa Action server in kubernetes cluster
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set the Kubernetes context
+        uses: azure/k8s-set-context@v2
+        with:
+          method: service-account
+          k8s-url: issel17.ee.auth.gr
+          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
 
   # deploy:
   #   - name: "Upgrade a Rasa Action Server deployment"
