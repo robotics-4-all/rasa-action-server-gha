@@ -4,7 +4,7 @@ metadata:
   name: rasa-action-server-app
   namespace: argocd
 spec:
-  project: dflow
+  project: default
   source:
     chart: rasa-action-server
     repoURL: https://helm.rasa.com
