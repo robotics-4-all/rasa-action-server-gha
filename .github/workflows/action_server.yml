@@ -48,14 +48,6 @@ jobs:
           method: service-account
           k8s-url: https://issel17.ee.auth.gr:16443
           k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
-      - name: 'Deploy'
-        uses: 'deliverybot/helm@v1'
-        with:
-          namespace: 'rasa'
-          chart: 'rasa-action-server'
-          token: '${{ github.token }}'
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
 
   # deploy:
   #   - name: "Upgrade a Rasa Action Server deployment"
