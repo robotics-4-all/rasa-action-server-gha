@@ -22,7 +22,7 @@ jobs:
     #     password: ${{ secrets.GITHUB_TOKEN }}
 
     - id: action_server
-      name: Build an action server with custom actions
+      name: Build an action server with custom actions and Upload to Docker Registry
       uses: RasaHQ/action-server-gha@main
       # Full list of parameters: https://github.com/RasaHQ/action-server-gha/tree/master#input-arguments
       with:

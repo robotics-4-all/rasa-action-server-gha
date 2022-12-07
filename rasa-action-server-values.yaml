@@ -1,0 +1,4 @@
+registry: "docker.io/klpanagi"
+image:
+  name: "rasa-action-server"
+  tag: "5753be463e020648c14ee018963ca0724f88e828"
