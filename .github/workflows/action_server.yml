@@ -31,17 +31,21 @@ jobs:
         docker_image_name: 'klpanagi/rasa-action-server'
         docker_registry_login: ${{ secrets.DOCKER_HUB_LOGIN }}
         docker_registry_password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        # More details about github context:
-        # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
-        #
-        # github.sha - The commit SHA that triggered the workflow run
         docker_image_tag: ${{ github.sha }}
 
-    - name: Update Deployment
-      id: imgupd
+  update_tag:
+    needs: [ build ]
+    name: Update application manifest for CD to use last commited rasa-action-server image
+    runs-on: ubuntu-latest
+    steps:
+    - name: Update Application manifest - Set image tag
+      id: update_application_manifest
       uses: mikefarah/yq@master
       with:
         cmd: yq eval '.spec.source.helm.parameters[2].value = "${{ github.sha }}"' -i manifests/application.yaml
-    - uses: stefanzweifel/git-auto-commit-action@v4
+
+    - name: Commit application manifest changes
+      id: commit_image_tag_changes
+      uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: Apply image name changes
+        commit_message: Apply image tag changes
