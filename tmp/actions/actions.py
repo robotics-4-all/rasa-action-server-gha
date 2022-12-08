@@ -35,6 +35,7 @@ def compute_user_properties(property):
 
 
 class Actionaskform1formcityslot(Action):
+    ## TEST CI/CD
 
     def name(self) -> Text:
         return "action_ask_form1_form_city_slot"
