@@ -38,6 +38,9 @@ jobs:
     name: Update application manifest for CD to use last commited rasa-action-server image
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
     - name: Update Application manifest - Set image tag
       id: update_application_manifest
       uses: mikefarah/yq@master
