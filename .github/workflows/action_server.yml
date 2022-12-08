@@ -36,22 +36,3 @@ jobs:
         #
         # github.sha - The commit SHA that triggered the workflow run
         docker_image_tag: ${{ github.sha }}
-
-  deploy:
-    name: Deploy Rasa Action server in kubernetes cluster
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set the Kubernetes context
-        uses: azure/k8s-set-context@v2
-        with:
-          method: service-account
-          k8s-url: ${{ secrets.KUBERNETES_URL }}
-          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
-      - name: "Upgrade a Rasa Action Server deployment"
-        run: |
-          helm upgrade --install --reuse-values \
-            --set image.name=${{ steps.action_server.outputs.docker_image_name }} \
-            --set image.tag=${{ steps.action_server.outputs.docker_image_tag }} \
-            --namespace rasa \
-            rasa-action-server rasa/rasa-action-server
