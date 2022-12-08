@@ -11,11 +11,13 @@ spec:
     targetRevision: 1.0.3
     helm:
       releaseName: rasa-action-server
-      values: |
-        registry: docker.io/klpanagi
-        image:
-          name: rasa-action-server
-          tag: 5753be463e020648c14ee018963ca0724f88e828
+      # values: |
+      #   registry: docker.io/klpanagi
+      #   image:
+      #     name: rasa-action-server
+      #     tag: 5753be463e020648c14ee018963ca0724f88e828
+      valueFiles:
+        - rasa-action-server-values.yaml
   destination:
     server: "https://kubernetes.default.svc"
     namespace: rasa
