@@ -8,7 +8,7 @@ spec:
   source:
     chart: rasa-action-server
     repoURL: https://helm.rasa.com
-    targetRevision: HEAD
+    targetRevision: 1.0.3
     helm:
       releaseName: rasa-action-server
       parameters:
