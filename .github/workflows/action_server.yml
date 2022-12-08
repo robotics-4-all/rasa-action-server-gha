@@ -37,12 +37,11 @@ jobs:
         # github.sha - The commit SHA that triggered the workflow run
         docker_image_tag: ${{ github.sha }}
 
-    - name: Update Depoloyment
+    - name: Update Deployment
       id: imgupd
       uses: mikefarah/yq@master
       with:
-        cmd: yq eval '.spec.source.helm.values = "${{ github.event.client_payload.image }}"' -i node-app/deployment.yaml
-      
+        cmd: yq eval '.spec.source.helm.parameters[2].value = "${{ github.sha }}"' -i manifests/application.yaml
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: Apply image name changes
