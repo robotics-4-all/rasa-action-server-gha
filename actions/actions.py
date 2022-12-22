@@ -7,6 +7,8 @@ from rasa_sdk.events import UserUtteranceReverted, SlotSet, Restarted
 import requests, re, json, random
 from datetime import datetime
 
+TEST = 'TEST'
+
 def compute_system_properties(property):
     if property.lower() == 'time':
       return datetime.now().strftime("%I:%M")
