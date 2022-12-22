@@ -43,7 +43,7 @@ class Actionaskform1formcityslot(Action):
         NAME = compute_user_properties("NAME")
         output = []
 
-        dispatcher.utter_message(text = f"SKATA?")
+        dispatcher.utter_message(text = f"For which city?")
 
         return output
 
