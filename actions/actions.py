@@ -7,8 +7,6 @@ from rasa_sdk.events import UserUtteranceReverted, SlotSet, Restarted
 import requests, re, json, random
 from datetime import datetime
 
-TEST = 'TEST'
-
 def compute_system_properties(property):
     if property.lower() == 'time':
       return datetime.now().strftime("%I:%M")
@@ -35,7 +33,6 @@ def compute_user_properties(property):
     if property.lower() == 'address':
       return ''
 
-
 class Actionaskform1formcityslot(Action):
 
     def name(self) -> Text:
@@ -45,10 +42,9 @@ class Actionaskform1formcityslot(Action):
         NAME = compute_user_properties("NAME")
         output = []
 
-        dispatcher.utter_message(text = f"For which city?")
+        dispatcher.utter_message(text = f"For which city { NAME } ?")
 
         return output
-
 
 class Actionaskform1formtimeslot(Action):
 
@@ -73,12 +69,9 @@ class Validateform1form(FormValidationAction):
         requested_slot = tracker.get_slot('requested_slot')
         if requested_slot == "answer":
             answer = None
-            time_slot = tracker.get_slot('time_slot')
-            city_slot = tracker.get_slot('city_slot')
-            NAME = compute_user_properties("NAME")
             response = requests.get(f"r4a.issel.ee.auth.gr:8080/weather",
-                headers = {'city': f"{city_slot}", 'time': f"{time_slot}"},
-                params = {'city': [f"{city_slot}"], 'time': f"{time_slot}", 'user': f"{NAME}"}
+                headers = {},
+                params = {}
             )
             try:
                 answer = response.json()['weather']['forecast']
@@ -99,35 +92,6 @@ class Actionanswerback(Action):
         output = []
 
         dispatcher.utter_message(text = f"Dear { NAME } the weather in { CITY } is { answer }")
-
-        ts = datetime.timestamp(datetime.now())
-        event_data = {
-            "id": "id",
-            "type": "event",
-            "timestamp": int(datetime.timestamp(datetime.now())),
-            "payload": {"message": {'a': '1', 'b': '2'}, "uri": f"/test" }
-        }
-        dispatcher.utter_message(json_message = event_data)
-
-        ts = datetime.timestamp(datetime.now())
-        event_data = {
-            "id": "id",
-            "type": "event",
-            "timestamp": int(datetime.timestamp(datetime.now())),
-            "payload": {"message": '/llalll', "uri": f"/test" }
-        }
-        dispatcher.utter_message(json_message = event_data)
-
-        ts = datetime.timestamp(datetime.now())
-        event_data = {
-            "id": "id",
-            "type": "event",
-            "timestamp": int(datetime.timestamp(datetime.now())),
-            "payload": {"message": ['a','1','b','2'], "uri": f"/test" }
-        }
-        dispatcher.utter_message(json_message = event_data)
-
-
 
         return output
 
