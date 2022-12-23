@@ -33,6 +33,67 @@ def compute_user_properties(property):
     if property.lower() == 'address':
       return ''
 
+class Actionaskform1formcityslot(Action):
+
+    def name(self) -> Text:
+        return "action_ask_form1_form_city_slot"
+
+    def run(self, dispatcher, tracker, domain):
+        output = []
+
+        dispatcher.utter_message(text = f"For which city?")
+
+        return output
+
+class Actionaskform1formtimeslot(Action):
+
+    def name(self) -> Text:
+        return "action_ask_form1_form_time_slot"
+
+    def run(self, dispatcher, tracker, domain):
+        output = []
+
+        dispatcher.utter_message(text = f"For when?")
+
+        return output
+
+
+class Validateform1form(FormValidationAction):
+
+    def name(self) -> Text:
+        return "validate_form1_form"
+
+    def extract_answer(self, dispatcher, tracker, domain):
+        output = {}
+        requested_slot = tracker.get_slot('requested_slot')
+        if requested_slot == "answer":
+            answer = None
+            response = requests.get(f"r4a.issel.ee.auth.gr:8080/weather",
+                headers = {},
+                params = {}
+            )
+            try:
+                answer = response.json()['weather']['forecast']
+                output["answer"] = answer
+            except:
+                print(f'Error retrieving response from r4a.issel.ee.auth.gr:8080/weather with code {response.status_code}.')
+        return output
+
+class Actionanswerback(Action):
+
+    def name(self) -> Text:
+        return "action_answer_back"
+
+    def run(self, dispatcher, tracker, domain):
+        answer = tracker.get_slot('answer')
+        NAME = compute_user_properties("NAME")
+        CITY = compute_user_properties("CITY")
+        output = []
+
+        dispatcher.utter_message(text = f"Dear { NAME } the weather in { CITY } is { answer }")
+
+        return output
+
 class Actionresp(Action):
 
     def name(self) -> Text:
