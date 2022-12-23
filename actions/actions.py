@@ -33,15 +33,58 @@ def compute_user_properties(property):
     if property.lower() == 'address':
       return ''
 
-class Actionresp(Action):
+class Actionaskform12345formname(Action):
 
     def name(self) -> Text:
-        return "action_resp"
+        return "action_ask_form12345_form_name"
 
     def run(self, dispatcher, tracker, domain):
         output = []
 
-        dispatcher.utter_message(text = f"Hello friend")
+        dispatcher.utter_message(text = f"Whats your name?")
+
+        return output
+
+class Actionaskform12345formage(Action):
+
+    def name(self) -> Text:
+        return "action_ask_form12345_form_age"
+
+    def run(self, dispatcher, tracker, domain):
+        output = []
+
+        dispatcher.utter_message(text = f"How old are you?")
+
+        return output
+
+
+class Validateform12345form(FormValidationAction):
+
+    def name(self) -> Text:
+        return "validate_form12345_form"
+
+    def extract_age(self, dispatcher, tracker, domain):
+        output = {}
+        requested_slot = tracker.get_slot('requested_slot')
+        if requested_slot == "age":
+            age = None
+            text = tracker.latest_message['text']
+            numbers = re.findall("\d+", text)
+            if len(numbers):
+                age = int(numbers[0])
+            output["age"] = age
+        return output
+
+class Actionanswer(Action):
+
+    def name(self) -> Text:
+        return "action_answer"
+
+    def run(self, dispatcher, tracker, domain):
+        name = tracker.get_slot('name')
+        output = []
+
+        dispatcher.utter_message(text = f"Glad to meet you  { name }")
 
         return output
 
