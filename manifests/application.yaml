@@ -17,7 +17,7 @@ spec:
         - name: image.name
           value: rasa-action-server
         - name: image.tag
-          value: 75392052ff3a9fab5f959002104b3be24c7c03e6
+          value: e44ad6203a19a25fa7beb4719630017dc62ab722
   destination:
     server: "https://kubernetes.default.svc"
     namespace: rasa
