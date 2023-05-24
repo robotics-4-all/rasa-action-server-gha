@@ -33,6 +33,73 @@ def compute_user_properties(property):
     if property.lower() == 'address':
       return ''
 
+class Actionaskform1formcityslot(Action):
+
+    def name(self) -> Text:
+        return "action_ask_form1_form_city_slot"
+
+    def run(self, dispatcher, tracker, domain):
+        output = []
+
+        dispatcher.utter_message(text = f"For which city?")
+
+        return output
+
+
+class Validateform1form(FormValidationAction):
+
+    def name(self) -> Text:
+        return "validate_form1_form"
+
+    def extract_answer(self, dispatcher, tracker, domain):
+        output = {}
+        requested_slot = tracker.get_slot('requested_slot')
+        if requested_slot == "answer":
+            answer = None
+            city_slot = tracker.get_slot('city_slot')
+            response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
+                headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
+                params = {'city': f"{city_slot}", 'language': 'English'}
+            )
+            try:
+                answer = response.json()['description']
+                output["answer"] = answer
+            except:
+                print(f'Error retrieving response from http://services.issel.ee.auth.gr/general_information/weather_openweather with code {response.status_code}.')
+        return output
+
+    def extract_answer2(self, dispatcher, tracker, domain):
+        output = {}
+        requested_slot = tracker.get_slot('requested_slot')
+        if requested_slot == "answer2":
+            answer2 = None
+            city_slot = tracker.get_slot('city_slot')
+            response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
+                headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
+                params = {'city': f"{city_slot}", 'language': 'English'}
+            )
+            try:
+                answer2 = response.json()['temp']
+                output["answer2"] = answer2
+            except:
+                print(f'Error retrieving response from http://services.issel.ee.auth.gr/general_information/weather_openweather with code {response.status_code}.')
+        return output
+
+class Actionanswerback(Action):
+
+    def name(self) -> Text:
+        return "action_answer_back"
+
+    def run(self, dispatcher, tracker, domain):
+        city_slot = tracker.get_slot('city_slot')
+        answer2 = tracker.get_slot('answer2')
+        answer = tracker.get_slot('answer')
+        output = []
+
+        dispatcher.utter_message(text = f"The weather for { city_slot }  is  { answer }  with  { answer2 }  degrees")
+
+        return output
+
 class Actiongreetback(Action):
 
     def name(self) -> Text:
@@ -54,61 +121,6 @@ class Actionrespondiambot(Action):
         output = []
 
         dispatcher.utter_message(text = f"I am a bot, powered by dFlow and Rasa.")
-
-        return output
-
-class Actionaskform1formname(Action):
-
-    def name(self) -> Text:
-        return "action_ask_form1_form_name"
-
-    def run(self, dispatcher, tracker, domain):
-        output = []
-
-        dispatcher.utter_message(text = f"What's your name?")
-
-        return output
-
-class Actionaskform1formage(Action):
-
-    def name(self) -> Text:
-        return "action_ask_form1_form_age"
-
-    def run(self, dispatcher, tracker, domain):
-        output = []
-
-        dispatcher.utter_message(text = f"How old are you?")
-
-        return output
-
-
-class Validateform1form(FormValidationAction):
-
-    def name(self) -> Text:
-        return "validate_form1_form"
-
-    def extract_age(self, dispatcher, tracker, domain):
-        output = {}
-        requested_slot = tracker.get_slot('requested_slot')
-        if requested_slot == "age":
-            age = None
-            text = tracker.latest_message['text']
-            numbers = re.findall("\d+", text)
-            if len(numbers):
-                age = int(numbers[0])
-            output["age"] = age
-        return output
-
-class Actionanswerback(Action):
-
-    def name(self) -> Text:
-        return "action_answer_back"
-
-    def run(self, dispatcher, tracker, domain):
-        name = tracker.get_slot('name')
-        output = []
-
-        dispatcher.utter_message(text = f"Glad to meet you  { name }")
 
         return output
 
