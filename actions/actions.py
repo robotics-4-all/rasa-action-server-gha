@@ -1,37 +1,47 @@
+
 from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import UserUtteranceReverted, SlotSet, Restarted
+from rasa_sdk.events import UserUtteranceReverted, SlotSet, Restarted, FollowupAction
 
-import requests, re, json, random
+import requests, re, json, random, socket
 from datetime import datetime
 
 def compute_system_properties(property):
     if property.lower() == 'time':
-      return datetime.now().strftime("%I:%M")
+        return datetime.now().strftime("%I:%M")
     if property.lower() == 'location':
-      return ''
+        return ''
     if property.lower() == 'random_int':
-      return random.randint(0,100)
+        return random.randint(0,100)
     if property.lower() == 'random_float':
-      return random.random()
+        return random.random()
+    if property.lower() == 'hostname':
+        return socket.gethostname()
+    if property.lower() == 'public_ip':
+        try:
+            return requests.get('https://api.ipify.org').content.decode('utf8')
+        except:
+            return "Could not resolve IP address"
+
 
 def compute_user_properties(property):
     if property.lower() == 'name':
-      return ''
+        return ''
     if property.lower() == 'surname':
-      return ''
+        return ''
     if property.lower() == 'age':
-      return ''
+        return ''
     if property.lower() == 'email':
-      return ''
+        return ''
     if property.lower() == 'phone':
-      return ''
+        return ''
     if property.lower() == 'city':
-      return ''
+        return ''
     if property.lower() == 'address':
-      return ''
+        return ''
+
 
 class Actionaskform1formcityslot(Action):
 
@@ -39,7 +49,9 @@ class Actionaskform1formcityslot(Action):
         return "action_ask_form1_form_city_slot"
 
     def run(self, dispatcher, tracker, domain):
+
         output = []
+
 
         dispatcher.utter_message(text = f"For which city?")
 
@@ -54,14 +66,15 @@ class Validateform1form(FormValidationAction):
     def extract_answer(self, dispatcher, tracker, domain):
         output = {}
         requested_slot = tracker.get_slot('requested_slot')
-        if requested_slot == "answer":
-            answer = None
+        city_slot = tracker.get_slot('city_slot')
+        answer = tracker.get_slot('answer')
+        if city_slot != None and answer == None:
             city_slot = tracker.get_slot('city_slot')
-            response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
-                headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
-                params = {'city': f"{city_slot}", 'language': 'English'}
-            )
             try:
+                response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
+                    headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
+                    params = {'city': f"{city_slot}", 'language': 'English'}
+                )
                 answer = response.json()['description']
                 output["answer"] = answer
             except:
@@ -71,14 +84,16 @@ class Validateform1form(FormValidationAction):
     def extract_answer2(self, dispatcher, tracker, domain):
         output = {}
         requested_slot = tracker.get_slot('requested_slot')
-        if requested_slot == "answer2":
-            answer2 = None
+        answer = tracker.get_slot('answer')
+        answer2 = tracker.get_slot('answer2')
+        if answer != None and answer2 == None:
             city_slot = tracker.get_slot('city_slot')
-            response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
-                headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
-                params = {'city': f"{city_slot}", 'language': 'English'}
-            )
+            answer = tracker.get_slot('answer')
             try:
+                response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
+                    headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
+                    params = {'city': f"{city_slot}", 'language': 'English'}
+                )
                 answer2 = response.json()['temp']
                 output["answer2"] = answer2
             except:
@@ -91,13 +106,18 @@ class Actionanswerback(Action):
         return "action_answer_back"
 
     def run(self, dispatcher, tracker, domain):
-        city_slot = tracker.get_slot('city_slot')
-        answer2 = tracker.get_slot('answer2')
-        answer = tracker.get_slot('answer')
+
         output = []
+
+        city_slot = tracker.get_slot('city_slot')
+        answer = tracker.get_slot('answer')
+        answer2 = tracker.get_slot('answer2')
 
         dispatcher.utter_message(text = f"The weather for { city_slot }  is  { answer }  with  { answer2 }  degrees")
 
+        output.append(SlotSet('city_slot', None))
+        output.append(SlotSet('answer', None))
+        output.append(SlotSet('answer2', None))
         return output
 
 class Actiongreetback(Action):
@@ -106,7 +126,9 @@ class Actiongreetback(Action):
         return "action_greet_back"
 
     def run(self, dispatcher, tracker, domain):
+
         output = []
+
 
         dispatcher.utter_message(text = f"Hello there!!!")
 
@@ -118,7 +140,9 @@ class Actionrespondiambot(Action):
         return "action_respond_iambot"
 
     def run(self, dispatcher, tracker, domain):
+
         output = []
+
 
         dispatcher.utter_message(text = f"I am a bot, powered by dFlow and Rasa.")
 
