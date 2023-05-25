@@ -43,24 +43,24 @@ def compute_user_properties(property):
         return ''
 
 
-class Actiongreetback1234(Action):
+class Actiongreetback9477(Action):
 
     def name(self) -> Text:
-        return "action_greet_back_1234"
+        return "action_greet_back_9477"
 
     def run(self, dispatcher, tracker, domain):
 
         output = []
 
 
-        dispatcher.utter_message(text = f"Hello there!!!")
+        dispatcher.utter_message(text = f"Hi :)")
 
         return output
 
-class Actionrespondiambot1234(Action):
+class Actionrespondiambot9477(Action):
 
     def name(self) -> Text:
-        return "action_respond_iambot_1234"
+        return "action_respond_iambot_9477"
 
     def run(self, dispatcher, tracker, domain):
 
@@ -69,5 +69,68 @@ class Actionrespondiambot1234(Action):
 
         dispatcher.utter_message(text = f"I am a bot, powered by dFlow and Rasa.")
 
+        return output
+
+class Actionaskform19477formname(Action):
+
+    def name(self) -> Text:
+        return "action_ask_form1_9477_form_name"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+        dispatcher.utter_message(text = f"What's your name?")
+
+        return output
+
+class Actionaskform19477formage(Action):
+
+    def name(self) -> Text:
+        return "action_ask_form1_9477_form_age"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+        dispatcher.utter_message(text = f"How old are you?")
+
+        return output
+
+
+class Validateform19477form(FormValidationAction):
+
+    def name(self) -> Text:
+        return "validate_form1_9477_form"
+
+    def extract_age(self, dispatcher, tracker, domain):
+        output = {}
+        requested_slot = tracker.get_slot('requested_slot')
+        if requested_slot == "age":
+            age = None
+            text = tracker.latest_message['text']
+            numbers = re.findall("\d+", text)
+            if len(numbers):
+                age = int(numbers[0])
+            output["age"] = age
+        return output
+
+class Actionanswerback9477(Action):
+
+    def name(self) -> Text:
+        return "action_answer_back_9477"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+        name = tracker.get_slot('name')
+
+        dispatcher.utter_message(text = f"Glad to meet you  { name }")
+
+        output.append(SlotSet('name', None))
+        output.append(SlotSet('age', None))
         return output
 
