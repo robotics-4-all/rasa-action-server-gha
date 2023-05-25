@@ -43,31 +43,17 @@ def compute_user_properties(property):
         return ''
 
 
-class Actiongreetback1234(Action):
+class Actiongreetback(Action):
 
     def name(self) -> Text:
-        return "action_greet_back_1234"
+        return "action_greet_back"
 
     def run(self, dispatcher, tracker, domain):
 
         output = []
 
 
-        dispatcher.utter_message(text = f"Hello there!!!")
-
-        return output
-
-class Actionrespondiambot1234(Action):
-
-    def name(self) -> Text:
-        return "action_respond_iambot_1234"
-
-    def run(self, dispatcher, tracker, domain):
-
-        output = []
-
-
-        dispatcher.utter_message(text = f"I am a bot, powered by dFlow and Rasa.")
+        dispatcher.utter_message(text = f"Hi there")
 
         return output
 
