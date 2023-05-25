@@ -43,10 +43,10 @@ def compute_user_properties(property):
         return ''
 
 
-class Actiongreetback10988(Action):
+class Actiongreetback1234(Action):
 
     def name(self) -> Text:
-        return "action_greet_back_10988"
+        return "action_greet_back_1234"
 
     def run(self, dispatcher, tracker, domain):
 
@@ -57,10 +57,10 @@ class Actiongreetback10988(Action):
 
         return output
 
-class Actionrespondiambot10988(Action):
+class Actionrespondiambot1234(Action):
 
     def name(self) -> Text:
-        return "action_respond_iambot_10988"
+        return "action_respond_iambot_1234"
 
     def run(self, dispatcher, tracker, domain):
 
