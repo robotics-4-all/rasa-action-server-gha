@@ -40,6 +40,8 @@ def compute_user_properties(property):
         return ''
     if property.lower() == 'address':
         return ''
+    else:
+    	return ''
 
 
 
