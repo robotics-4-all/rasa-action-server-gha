@@ -24,6 +24,8 @@ def compute_system_properties(property):
             return requests.get('https://api.ipify.org').content.decode('utf8')
         except:
             return "Could not resolve IP address"
+    else:
+    	pass
 
 
 def compute_user_properties(property):
@@ -220,12 +222,10 @@ class Actionaskstoresanewnoteinpersonalfileregistrydlg3formformnote(Action):
         return "action_ask_storesANewNoteInPersonalFileRegistry_dlg_3_form_form_note"
 
     def run(self, dispatcher, tracker, domain):
-
         output = []
-
         asked = 'note'
-        output.append(SlotSet('asked', asked))
         
+        output.append(SlotSet('asked', asked))        
         dispatcher.utter_message(text = f"Please provide the note")
 
         return output
@@ -236,13 +236,10 @@ class Actionstoresanewnoteinpersonalfileregistrydlg3ag(Action):
         return "action_storesANewNoteInPersonalFileRegistry_dlg_3_ag"
 
     def run(self, dispatcher, tracker, domain):
-
         output = []
 
         note = tracker.get_slot('note')
-
-         
-         
+        
         try:
             response = requests.post(f"http://localhost:8800/notes/add",
                 headers = {'Content-Type': 'application/json', },
