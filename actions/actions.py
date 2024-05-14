@@ -24,9 +24,6 @@ def compute_system_properties(property):
             return requests.get('https://api.ipify.org').content.decode('utf8')
         except:
             return "Could not resolve IP address"
-    else:
-    	pass
-
 
 def compute_user_properties(property):
     if property.lower() == 'name':
