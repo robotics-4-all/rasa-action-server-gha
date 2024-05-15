@@ -128,7 +128,7 @@ class Actionrespondiambot(Action):
 
 
          
-        dispatcher.utter_message(text = f"I am a bot, powered by dFlow and Rasa. Have a great day!")
+        dispatcher.utter_message(text = f"I am a bot, powered by dFlow and Rasa.")
 
         return output
 
