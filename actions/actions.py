@@ -25,6 +25,7 @@ def compute_system_properties(property):
         except:
             return "Could not resolve IP address"
 
+
 def compute_user_properties(property):
     if property.lower() == 'name':
         return ''
@@ -42,213 +43,92 @@ def compute_user_properties(property):
         return ''
 
 
-class Validateretrieveajokedlg1formform(FormValidationAction):
+class Actionaskform1formcityslot(Action):
 
     def name(self) -> Text:
-        return "validate_retrieveAJoke_dlg_1_form_form"
+        return "action_ask_form1_form_city_slot"
 
-    def extract_question(self, dispatcher, tracker, domain):
-        output = {}
-        requested_slot = tracker.get_slot('requested_slot')
-        question = tracker.get_slot('question')
-        if question == None:
-            try:
-                response = requests.get(f"http://localhost:8800/quotes/get_joke",
-                    headers = {},
-                    params = {}
-                )
-                question = response.json()['question']
-                output["question"] = question
-            except:
-                print(f'Error retrieving response from http://localhost:8800/quotes/get_joke with code {response.status_code}.')
-                dispatcher.utter_message(text = "Apologies, something went wrong.")
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+         
+        dispatcher.utter_message(text = f"For which city?")
+
         return output
+
+
+class Validateform1form(FormValidationAction):
+
+    def name(self) -> Text:
+        return "validate_form1_form"
 
     def extract_answer(self, dispatcher, tracker, domain):
         output = {}
         requested_slot = tracker.get_slot('requested_slot')
-        question = tracker.get_slot('question')
+        city_slot = tracker.get_slot('city_slot')
         answer = tracker.get_slot('answer')
-        if question != None and answer == None:
-            question = tracker.get_slot('question')
+        if city_slot != None and answer == None:
+            city_slot = tracker.get_slot('city_slot')
             try:
-                response = requests.get(f"http://localhost:8800/quotes/get_joke",
-                    headers = {},
-                    params = {}
+                response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
+                    headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
+                    params = {'city': f"{city_slot}", 'language': 'English'}
                 )
-                answer = response.json()['answer']
+                answer = response.json()['description']
                 output["answer"] = answer
             except:
-                print(f'Error retrieving response from http://localhost:8800/quotes/get_joke with code {response.status_code}.')
+                print(f'Error retrieving response from http://services.issel.ee.auth.gr/general_information/weather_openweather with code {response.status_code}.')
                 dispatcher.utter_message(text = "Apologies, something went wrong.")
         return output
 
-class Actionretrieveajokedlg1ag(Action):
+class Actionanswerback(Action):
 
     def name(self) -> Text:
-        return "action_retrieveAJoke_dlg_1_ag"
+        return "action_answer_back"
 
     def run(self, dispatcher, tracker, domain):
 
         output = []
 
-        question = tracker.get_slot('question')
+        city_slot = tracker.get_slot('city_slot')
         answer = tracker.get_slot('answer')
 
          
-        dispatcher.utter_message(text = f"Here is a joke for you: Question: {question} Answer: {answer}")
+        dispatcher.utter_message(text = f"The kairos gia tin  { city_slot }  is  { answer }")
 
-        output.append(SlotSet('question', None))
+        output.append(SlotSet('city_slot', None))
         output.append(SlotSet('answer', None))
         return output
 
-class Actionasktheweatherinformationdlg2formformcity(Action):
+class Actiongreetback(Action):
 
     def name(self) -> Text:
-        return "action_ask_theWeatherInformation_dlg_2_form_form_city"
-
-    def run(self, dispatcher, tracker, domain):
-
-        output = []
-        asked = 'city'
-        output.append(SlotSet('asked', asked))
-        
-        dispatcher.utter_message(text = f"Please provide the city")
-
-        return output
-
-
-class Validatetheweatherinformationdlg2formform(FormValidationAction):
-
-    def name(self) -> Text:
-        return "validate_theWeatherInformation_dlg_2_form_form"
-    
-    def extract_city(self, dispatcher, tracker, domain):
-        output = {}
-        requested_slot = tracker.get_slot('requested_slot')
-        city = tracker.get_slot('city')
-        asked = tracker.get_slot('asked')
-        if city == None and asked == 'city':
-            city = tracker.latest_message.get("text")
-            output["city"] = city
-        return output
-
-
-    def extract_description(self, dispatcher, tracker, domain):
-        output = {}
-        requested_slot = tracker.get_slot('requested_slot')
-        city = tracker.get_slot('city')
-        description = tracker.get_slot('description')
-        if city != None and description == None:
-            city = tracker.get_slot('city')
-            try:
-                response = requests.get(f"http://localhost:8800/weather_information",
-                    headers = {},
-                    params = {'city': f"{city}"}
-                )
-                print(response.json())
-                description = response.json()['description']
-                output["description"] = description
-            except:
-                print(f'Error retrieving response from http://localhost:8800/weather_information with code {response.status_code}.')
-                dispatcher.utter_message(text = "Apologies, something went wrong.")
-        return output
-
-    def extract_temp(self, dispatcher, tracker, domain):
-        output = {}
-        requested_slot = tracker.get_slot('requested_slot')
-        description = tracker.get_slot('description')
-        temp = tracker.get_slot('temp')
-        if description != None and temp == None:
-            description = tracker.get_slot('description')
-            city = tracker.get_slot('city')
-            try:
-                response = requests.get(f"http://localhost:8800/weather_information",
-                    headers = {},
-                    params = {'city': f"{city}"}
-                )
-                temp = response.json()['temp']
-                print(response.json())
-                output["temp"] = temp
-            except:
-                print(f'Error retrieving response from http://localhost:8800/weather_information with code {response.status_code}.')
-                dispatcher.utter_message(text = "Apologies, something went wrong.")
-        return output
-
-class Actiontheweatherinformationdlg2ag(Action):
-
-    def name(self) -> Text:
-        return "action_theWeatherInformation_dlg_2_ag"
+        return "action_greet_back"
 
     def run(self, dispatcher, tracker, domain):
 
         output = []
 
-        city = tracker.get_slot('city')
-        description = tracker.get_slot('description')
-        temp = tracker.get_slot('temp')
-         
-        dispatcher.utter_message(text = f"The weather in {city} is {description} with a temperature of {temp}.")
-
-        output.append(SlotSet('city', None))
-        output.append(SlotSet('description', None))
-        output.append(SlotSet('temp', None))
-        return output
-    
-
-class Validatethisshit(FormValidationAction):
-
-    def name(self) -> Text:
-        return "validate_storesANewNoteInPersonalFileRegistry_dlg_3_form_form"
-    
-    def extract_note(self, dispatcher, tracker, domain):
-        output = {}
-        requested_slot = tracker.get_slot('requested_slot')
-        note = tracker.get_slot('note')
-        asked = tracker.get_slot('asked')
-        if note == None and asked == 'note':
-            note = tracker.latest_message.get("text")
-            output["note"] = note
-        return output
-
-
-class Actionaskstoresanewnoteinpersonalfileregistrydlg3formformnote(Action):
-
-    def name(self) -> Text:
-        return "action_ask_storesANewNoteInPersonalFileRegistry_dlg_3_form_form_note"
-
-    def run(self, dispatcher, tracker, domain):
-        output = []
-        asked = 'note'
-        
-        output.append(SlotSet('asked', asked))        
-        dispatcher.utter_message(text = f"Please provide the note")
-
-        return output
-
-class Actionstoresanewnoteinpersonalfileregistrydlg3ag(Action):
-
-    def name(self) -> Text:
-        return "action_storesANewNoteInPersonalFileRegistry_dlg_3_ag"
-
-    def run(self, dispatcher, tracker, domain):
-        output = []
-
-        note = tracker.get_slot('note')
-        
-        try:
-            response = requests.post(f"http://localhost:8800/notes/add",
-                headers = {'Content-Type': 'application/json', },
-                data = {},
-                params = {'note': f"{note}"}
-            )
-        except:
-            print(f'Error retrieving response from http://localhost:8800/notes/add with code {response.status_code}.')
-            dispatcher.utter_message(text = "Apologies, something went wrong.")
 
          
-        dispatcher.utter_message(text = f"Your new note has been successfully stored in the personal file registry.")
+        dispatcher.utter_message(text = f"Hello ma man!!!")
 
-        output.append(SlotSet('note', None))
+        return output
+
+class Actionrespondiambot(Action):
+
+    def name(self) -> Text:
+        return "action_respond_iambot"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+         
+        dispatcher.utter_message(text = f"I am a boot, powered by dFlow and Rasa.")
+
         return output
 
