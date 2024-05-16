@@ -92,8 +92,8 @@ class Actionanswerback(Action):
 
         output = []
 
-        city_slot = tracker.get_slot('city_slot')
         answer = tracker.get_slot('answer')
+        city_slot = tracker.get_slot('city_slot')
 
          
         dispatcher.utter_message(text = f"The kairos gia tin  { city_slot }  is  { answer }")
