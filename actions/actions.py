@@ -43,10 +43,10 @@ def compute_user_properties(property):
         return ''
 
 
-class Actionaskform1formcityslot(Action):
+class Actionaskaf1formslot1(Action):
 
     def name(self) -> Text:
-        return "action_ask_form1_form_city_slot"
+        return "action_ask_AF1_form_slot1"
 
     def run(self, dispatcher, tracker, domain):
 
@@ -54,81 +54,150 @@ class Actionaskform1formcityslot(Action):
 
 
          
-        dispatcher.utter_message(text = f"For which city?")
+        dispatcher.utter_message(text = f"Give parameter 1")
+
+        return output
+
+class Actionaskaf1formslot2(Action):
+
+    def name(self) -> Text:
+        return "action_ask_AF1_form_slot2"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+         
+        dispatcher.utter_message(text = f"Give parameter 2")
+
+        return output
+
+class Actionaskaf1formslot3(Action):
+
+    def name(self) -> Text:
+        return "action_ask_AF1_form_slot3"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+        slot1 = tracker.get_slot('slot1')
+
+         
+        dispatcher.utter_message(text = f"Give parameter 3 you { slot1 }")
 
         return output
 
 
-class Validateform1form(FormValidationAction):
+class Validateaf1form(FormValidationAction):
 
     def name(self) -> Text:
-        return "validate_form1_form"
+        return "validate_AF1_form"
 
-    def extract_answer(self, dispatcher, tracker, domain):
+    def extract_slot2(self, dispatcher, tracker, domain):
         output = {}
         requested_slot = tracker.get_slot('requested_slot')
-        city_slot = tracker.get_slot('city_slot')
-        answer = tracker.get_slot('answer')
-        if city_slot != None and answer == None:
-            city_slot = tracker.get_slot('city_slot')
+        if requested_slot == "slot2":
+            slot2 = None
+            intent = tracker.latest_message.get("intent", {}).get("name")
+            if intent == 'find_doctor':
+                slot2 = f"'True'"
+            if intent == 'external_1':
+                slot2 = f"'False'"
+            output["slot2"] = slot2
+        return output
+
+class Actionanswers(Action):
+
+    def name(self) -> Text:
+        return "action_answers"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+        slot1 = tracker.get_slot('slot1')
+
+         
+        dispatcher.utter_message(text = f"Hello { slot1 } how are you")
+
+        output.append(SlotSet('slot1', None))
+        output.append(SlotSet('slot2', None))
+        output.append(SlotSet('slot3', None))
+        return output
+
+class Actionasksf1formslot1(Action):
+
+    def name(self) -> Text:
+        return "action_ask_SF1_form_slot1"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+         
+        dispatcher.utter_message(text = f"Give parameter 1")
+
+        return output
+
+
+class Validatesf1form(FormValidationAction):
+
+    def name(self) -> Text:
+        return "validate_SF1_form"
+
+    def extract_slot2(self, dispatcher, tracker, domain):
+        output = {}
+        requested_slot = tracker.get_slot('requested_slot')
+        slot1 = tracker.get_slot('slot1')
+        slot2 = tracker.get_slot('slot2')
+        if slot1 != None and slot2 == None:
+            slot1 = tracker.get_slot('slot1')
+            username = f"mario"
             try:
-                response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
-                    headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
-                    params = {'city': f"{city_slot}", 'language': 'English'}
+                response = requests.post(f"r4a.issel.ee.auth.gr/{username}",
+                    headers = {},
+                    data = {},
+                    params = {'city': {'a': f"{slot1}", 'b': '0'}}
                 )
-                answer = response.json()['description']
-                output["answer"] = answer
+                slot2 = response.json()
+                output["slot2"] = slot2
             except:
-                print(f'Error retrieving response from http://services.issel.ee.auth.gr/general_information/weather_openweather with code {response.status_code}.')
+                print(f'Error retrieving response from r4a.issel.ee.auth.gr/{username} with code {response.status_code}.')
                 dispatcher.utter_message(text = "Apologies, something went wrong.")
         return output
 
-class Actionanswerback(Action):
+class Actionanswers2(Action):
 
     def name(self) -> Text:
-        return "action_answer_back"
+        return "action_answers2"
 
     def run(self, dispatcher, tracker, domain):
 
         output = []
 
-        answer = tracker.get_slot('answer')
-        city_slot = tracker.get_slot('city_slot')
+        slot1 = tracker.get_slot('slot1')
 
          
-        dispatcher.utter_message(text = f"The kairos gia tin  { city_slot }  is  { answer }")
-
-        output.append(SlotSet('city_slot', None))
-        output.append(SlotSet('answer', None))
-        return output
-
-class Actiongreetback(Action):
-
-    def name(self) -> Text:
-        return "action_greet_back"
-
-    def run(self, dispatcher, tracker, domain):
-
-        output = []
-
+        dispatcher.utter_message(text = f"The weather is  { slot1 }")
 
          
-        dispatcher.utter_message(text = f"Hello ma man!!!")
-
-        return output
-
-class Actionrespondiambot(Action):
-
-    def name(self) -> Text:
-        return "action_respond_iambot"
-
-    def run(self, dispatcher, tracker, domain):
-
-        output = []
-
-
          
-        dispatcher.utter_message(text = f"I am a boot, powered by dFlow and Rasa.")
+         
+        username = f"mario"
+        try:
+            response = requests.post(f"r4a.issel.ee.auth.gr/{username}",
+                headers = {},
+                data = {},
+                params = {'city': f"{slot1}"}
+            )
+        except:
+            print(f'Error retrieving response from r4a.issel.ee.auth.gr/{username} with code {response.status_code}.')
+            dispatcher.utter_message(text = "Apologies, something went wrong.")
 
+        output.append(SlotSet('slot1', None))
+        output.append(SlotSet('slot2', None))
         return output
 
