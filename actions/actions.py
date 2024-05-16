@@ -64,20 +64,40 @@ class Validateform1form(FormValidationAction):
     def name(self) -> Text:
         return "validate_form1_form"
 
-    def extract_temp(self, dispatcher, tracker, domain):
+    def extract_answer(self, dispatcher, tracker, domain):
         output = {}
         requested_slot = tracker.get_slot('requested_slot')
         city_slot = tracker.get_slot('city_slot')
-        temp = tracker.get_slot('temp')
-        if city_slot != None and temp == None:
+        answer = tracker.get_slot('answer')
+        if city_slot != None and answer == None:
             city_slot = tracker.get_slot('city_slot')
             try:
                 response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
-                    headers = {},
-                    params = {'city': f"{city_slot}"}
+                    headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
+                    params = {'city': f"{city_slot}", 'language': 'English'}
                 )
-                temp = response.json()['temp']
-                output["temp"] = temp
+                answer = response.json()['description']
+                output["answer"] = answer
+            except:
+                print(f'Error retrieving response from http://services.issel.ee.auth.gr/general_information/weather_openweather with code {response.status_code}.')
+                dispatcher.utter_message(text = "Apologies, something went wrong.")
+        return output
+
+    def extract_answer2(self, dispatcher, tracker, domain):
+        output = {}
+        requested_slot = tracker.get_slot('requested_slot')
+        answer = tracker.get_slot('answer')
+        answer2 = tracker.get_slot('answer2')
+        if answer != None and answer2 == None:
+            answer = tracker.get_slot('answer')
+            city_slot = tracker.get_slot('city_slot')
+            try:
+                response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
+                    headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
+                    params = {'city': f"{city_slot}", 'language': 'English'}
+                )
+                answer2 = response.json()['temp']
+                output["answer2"] = answer2
             except:
                 print(f'Error retrieving response from http://services.issel.ee.auth.gr/general_information/weather_openweather with code {response.status_code}.')
                 dispatcher.utter_message(text = "Apologies, something went wrong.")
@@ -92,13 +112,45 @@ class Actionanswerback(Action):
 
         output = []
 
-        temp = tracker.get_slot('temp')
+        answer = tracker.get_slot('answer')
+        answer2 = tracker.get_slot('answer2')
         city_slot = tracker.get_slot('city_slot')
 
          
-        dispatcher.utter_message(text = f"The weather forecast will be  { temp }  for  { city_slot }")
+        dispatcher.utter_message(text = f"The weather for { city_slot }  is  { answer }  with  { answer2 }  degrees")
 
         output.append(SlotSet('city_slot', None))
-        output.append(SlotSet('temp', None))
+        output.append(SlotSet('answer', None))
+        output.append(SlotSet('answer2', None))
+        return output
+
+class Actiongreetback(Action):
+
+    def name(self) -> Text:
+        return "action_greet_back"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+         
+        dispatcher.utter_message(text = f"Hello there!!!")
+
+        return output
+
+class Actionrespondiambot(Action):
+
+    def name(self) -> Text:
+        return "action_respond_iambot"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+         
+        dispatcher.utter_message(text = f"I am a bot, powered by dFlow and Rasa.")
+
         return output
 
