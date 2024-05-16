@@ -58,3 +58,19 @@ class Actiongreetback(Action):
 
         return output
 
+class Actionaskaskstatusformformhowareyou(Action):
+
+    def name(self) -> Text:
+        return "action_ask_ask_status_form_form_how_are_you"
+
+    def run(self, dispatcher, tracker, domain):
+
+        output = []
+
+
+         
+        dispatcher.utter_message(text = f"How are you?")
+
+        output.append(SlotSet('how_are_you', None))
+        return output
+
