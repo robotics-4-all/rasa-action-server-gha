@@ -43,21 +43,6 @@ def compute_user_properties(property):
         return ''
 
 
-class Actiongreetback(Action):
-
-    def name(self) -> Text:
-        return "action_greet_back"
-
-    def run(self, dispatcher, tracker, domain):
-
-        output = []
-
-
-         
-        dispatcher.utter_message(text = f"Hello there!")
-
-        return output
-
 class Actionaskform1formcityslot(Action):
 
     def name(self) -> Text:
