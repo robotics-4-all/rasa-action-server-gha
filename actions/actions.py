@@ -91,17 +91,15 @@ class Validateform1form(FormValidationAction):
         if answer != None and answer2 == None:
             answer = tracker.get_slot('answer')
             city_slot = tracker.get_slot('city_slot')
-            city = f"{ city_slot }"
-            language = f"English"
             try:
-                response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather/{city}/{language}",
+                response = requests.get(f"http://services.issel.ee.auth.gr/general_information/weather_openweather",
                     headers = {'access_token': 'Q5eJZ8sSLEX6XNmOHyMlWagI'},
-                    params = {}
+                    params = {'city': f"{city_slot}", 'language': 'English'}
                 )
                 answer2 = response.json()['temp']
                 output["answer2"] = answer2
             except:
-                print(f'Error retrieving response from http://services.issel.ee.auth.gr/general_information/weather_openweather/{city}/{language} with code {response.status_code}.')
+                print(f'Error retrieving response from http://services.issel.ee.auth.gr/general_information/weather_openweather with code {response.status_code}.')
                 dispatcher.utter_message(text = "Apologies, something went wrong.")
         return output
 
